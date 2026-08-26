@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* BharatPe brand palette — sourced from bharatpe.com / bharatpecapital.com
+     via tl-bp-design-alignment tokens */
+  --background: #060a10;
+  --foreground: #f5f7fa;
+  --teal: #17b8ce;         /* BharatPe logo ring teal */
+  --teal-dim: #0f8a9b;
+  --electric: #2b7bff;     /* BharatPe Dodger Blue — primary CTA/link */
+  --electric-2: #5b9dff;
+  --coral: #ef6a5a;        /* BharatPe logo coral bar */
+  --stratos: #000f3b;      /* BharatPe heading-on-light navy */
+  --cod-gray: #1c1c1c;     /* BharatPe dark section bg */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-teal: var(--teal);
+  --color-electric: var(--electric);
+  --font-sans: var(--font-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
-body {
+html, body {
+  height: 100%;
+  overflow: hidden;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), "Inter", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  cursor: none;
+}
+
+#app-root {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+}
+
+.glass-strong {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+}
+
+.text-gradient-teal {
+  background: linear-gradient(90deg, var(--teal), var(--electric-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glow-teal {
+  box-shadow: 0 0 40px -8px rgba(0, 217, 181, 0.55);
+}
+
+.glow-electric {
+  box-shadow: 0 0 40px -8px rgba(59, 130, 246, 0.55);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2.2s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+}
+
+.cursor-dot {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 18px 4px rgba(0, 217, 181, 0.7);
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
 }
