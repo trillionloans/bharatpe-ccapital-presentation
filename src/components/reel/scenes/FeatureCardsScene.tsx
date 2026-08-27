@@ -24,7 +24,7 @@ export function FeatureCardsScene() {
         transition={{ duration: 0.8 }}
         className="absolute top-12 left-1/2 -translate-x-1/2 text-3xl md:text-5xl font-semibold text-gradient-teal text-center"
       >
-        Built for the Next Generation
+        Technology Edge
       </motion.h2>
 
       <div className="absolute inset-0 flex items-center justify-center">

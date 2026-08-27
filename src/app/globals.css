@@ -85,6 +85,11 @@ html, body {
   animation: pulse-ring 2.2s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
 }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 .cursor-dot {
   position: fixed;
   pointer-events: none;

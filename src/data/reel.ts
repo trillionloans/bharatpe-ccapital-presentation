@@ -20,37 +20,55 @@ export interface ProductType {
   image: string;
 }
 
-/** Product portfolio — sourced from tl-bp-design-alignment/types-of-loans-spec.md */
+/** Product portfolio — MSME & Consumer lending suite */
 export const productTypes: ProductType[] = [
   {
-    id: "sme",
-    title: "SME Loan",
-    description: "Boost your business growth with collateral-free SME loans",
+    id: "working-capital",
+    title: "Working Capital Loans",
+    description: "Fast, collateral-free liquidity to keep your business moving",
+    image: "/products/loan-sme.png",
+  },
+  {
+    id: "merchant-finance",
+    title: "Merchant Finance",
+    description: "Revenue-linked credit embedded right into your merchant stack",
+    image: "/products/loan-sme.png",
+  },
+  {
+    id: "term",
+    title: "Business Term Loans",
+    description: "Flexible term loans sized to your growth milestones",
+    image: "/products/loan-term.png",
+  },
+  {
+    id: "trade-finance",
+    title: "Trade & Supply Chain Finance",
+    description: "Unlock working capital across your supply chain seamlessly",
+    image: "/products/loan-term.png",
+  },
+  {
+    id: "revenue-based",
+    title: "Revenue-Based Financing",
+    description: "Repay in sync with your revenue — no fixed EMI pressure",
     image: "/products/loan-sme.png",
   },
   {
     id: "personal",
-    title: "Personal Loan",
-    description: "Get 'on tap' finance as per your need and convenience",
+    title: "Personal Loans",
+    description: "On-tap personal finance tailored to individual needs",
     image: "/products/loan-personal.png",
   },
   {
-    id: "consumer",
-    title: "Consumer Loan",
-    description: "The partner of choice to finance your purchases",
+    id: "embedded",
+    title: "Embedded Finance",
+    description: "Credit woven into your platform — invisible yet powerful",
     image: "/products/loan-consumer.png",
   },
   {
-    id: "vehicle",
-    title: "Vehicle Loan",
-    description: "Let your happiness go the extra mile with the vehicle of your choice",
-    image: "/products/loan-vehicle.png",
-  },
-  {
-    id: "term",
-    title: "Business Term Loan",
-    description: "Easy, flexible term loans tailored to your financial needs",
-    image: "/products/loan-term.png",
+    id: "end-use",
+    title: "End-Use Defined Credit",
+    description: "Purpose-built loans with defined end-use and compliance guardrails",
+    image: "/products/loan-consumer.png",
   },
 ];
 
@@ -119,7 +137,7 @@ export const indiaPresenceMarkers: PresenceMarker[] = [
   { id: "wb", x: 412, y: 310 },
 ];
 
-export const aiInputs = ["UPI", "Payments", "GST", "Banking", "Bureau", "KYC", "AML", "Behaviour"];
+export const aiInputs = ["UPI", "Payments", "GST", "Banking", "Bureau", "VKYC", "AML", "Behaviour"];
 
 export interface PipelineStage {
   id: string;
@@ -143,13 +161,13 @@ export interface FeatureCard {
 }
 
 export const featureCards: FeatureCard[] = [
+  { id: "onboarding", title: "Partner Live in 2–3 Weeks", icon: "/brand/icon-fast-flexible.png" },
+  { id: "ai", title: "In-House AI Decisioning", icon: "/brand/icon-secure.png" },
+  { id: "cloud", title: "Cloud-Native · 99.99% Uptime", icon: "/brand/icon-seamless.png" },
+  { id: "disbursal", title: "Straight-Through Auto Disbursal", icon: "/brand/icon-fast-flexible.png" },
+  { id: "vkyc", title: "VKYC · RBI-Approved Onboarding", icon: "/brand/icon-secure.png" },
   { id: "digital", title: "100% Digital Journey", icon: "/brand/icon-seamless.png" },
-  { id: "underwriting", title: "AI Powered Underwriting", icon: "/brand/icon-secure.png" },
-  { id: "risk", title: "Real-Time Risk Assessment", icon: "/brand/icon-fast-flexible.png" },
-  { id: "apis", title: "Developer APIs", icon: "/brand/icon-hasslefree.png" },
-  { id: "instant", title: "Instant Loan Processing", icon: "/brand/icon-fast-flexible.png" },
-  { id: "scalable", title: "Scalable Platform", icon: "/brand/icon-seamless.png" },
-  { id: "compliance", title: "Compliance by Design", icon: "/brand/icon-secure.png" },
-  { id: "fraud", title: "Fraud Detection", icon: "/brand/icon-hasslefree.png" },
+  { id: "devportal", title: "DIY Developer Portal · Easy LOS", icon: "/brand/icon-hasslefree.png" },
+  { id: "support", title: "AI-Assisted Smart Support", icon: "/brand/icon-hasslefree.png" },
 ];
 
