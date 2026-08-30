@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { indiaMapViewBox, indiaPresenceMarkers } from "@/data/reel";
-import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
+import { formatStatValue } from "@/components/ui/AnimatedCounter";
 
 const MAP_ASPECT = indiaMapViewBox.width / indiaMapViewBox.height;
 const PIN_LOGO = "/brand/bpc-pin-logo.png";
@@ -19,37 +19,87 @@ const stats: Array<{
   label: string;
   sub: string;
   accent: string;
+  decimals?: number;
 }> = [
   {
-    value: 36,
-    suffix: "",
-    label: "States & UTs",
-    sub: "Full national coverage",
-    accent: "#17b8ce",
-  },
-  {
-    value: 17,
-    suffix: "M+",
-    label: "Merchant Network",
-    sub: "MSME & retail footprint",
+    value: 12000,
+    suffix: "+",
+    label: "Pincodes",
+    sub: "Pan-India reach",
     accent: "#2b7bff",
   },
   {
-    value: 1700,
-    prefix: "₹",
-    suffix: "B+",
-    label: "Annual TPV",
-    sub: "Transaction value processed",
+    value: 1.1,
+    suffix: " Million+",
+    label: "Customer Acquisition",
+    sub: "Borrowers onboarded",
     accent: "#ef6a5a",
+    decimals: 1,
   },
 ];
 
-const segments = [
-  { label: "MSMEs & SMEs", color: "#17b8ce" },
-  { label: "Merchants", color: "#2b7bff" },
-  { label: "Consumers", color: "#ef6a5a" },
-  { label: "Supply Chain", color: "#9b7bff" },
+const borrowerPersonas: Array<
+  | { type: "percent"; value: number; headline: string; detail: string; accent: string }
+  | { type: "metrics"; metrics: Array<{ label: string; value: string }> }
+> = [
+  {
+    type: "percent",
+    value: 82,
+    headline: "82%",
+    detail: "Borrowers are MSME (Micro Merchants)",
+    accent: "#17b8ce",
+  },
+  {
+    type: "percent",
+    value: 70,
+    headline: "70%",
+    detail: "Portfolio is Daily Installment Product (EDI); Avg. daily installment of ₹500",
+    accent: "#2b7bff",
+  },
+  {
+    type: "metrics",
+    metrics: [
+      { label: "Avg. Ticket Size", value: "> ₹1 Lakh" },
+      { label: "Avg. Tenor", value: "Up to 12 months" },
+    ],
+  },
+  {
+    type: "percent",
+    value: 87,
+    headline: "87%",
+    detail: "Borrowers are outside Metro cities",
+    accent: "#ef6a5a",
+  },
+  {
+    type: "percent",
+    value: 19,
+    headline: "19%",
+    detail: "Borrowers are female",
+    accent: "#9b7bff",
+  },
 ];
+
+function PersonaDonut({ percent, accent }: { percent: number; accent: string }) {
+  const radius = 16;
+  const circumference = 2 * Math.PI * radius;
+  const filled = (percent / 100) * circumference;
+
+  return (
+    <svg viewBox="0 0 40 40" className="h-10 w-10 shrink-0 -rotate-90">
+      <circle cx="20" cy="20" r={radius} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="4.5" />
+      <circle
+        cx="20"
+        cy="20"
+        r={radius}
+        fill="none"
+        stroke={accent}
+        strokeWidth="4.5"
+        strokeLinecap="round"
+        strokeDasharray={`${filled} ${circumference}`}
+      />
+    </svg>
+  );
+}
 
 function PinDropMarker({ x, y, index }: { x: number; y: number; index: number }) {
   const left = (x / indiaMapViewBox.width) * 100;
@@ -92,10 +142,11 @@ function PinDropMarker({ x, y, index }: { x: number; y: number; index: number })
 
 export function MerchantEcosystemScene() {
   return (
-    <div className="absolute inset-0 overflow-hidden flex items-center gap-6 px-8">
+    <div className="absolute inset-0 overflow-hidden flex items-center justify-center px-6 md:px-10 pt-14 pb-12">
+      <div className="flex w-full max-w-[1180px] items-center gap-6 md:gap-10">
 
-      {/* ── Left panel — context & stats ── */}
-      <div className="flex flex-col justify-center shrink-0 w-[38%] max-w-[420px]">
+      {/* ── Left panel — footprint stats & borrower profile ── */}
+      <div className="flex flex-col shrink-0 w-[44%] max-w-[500px]">
 
         <motion.p
           initial={{ opacity: 0, x: -16 }}
@@ -110,84 +161,74 @@ export function MerchantEcosystemScene() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="text-2xl md:text-4xl font-bold text-gradient-teal leading-tight mb-6"
+          className="text-2xl md:text-4xl font-bold text-gradient-teal leading-tight mb-4"
         >
           Pan-India Credit Network
         </motion.h2>
 
-        {/* Animated stats */}
-        <div className="flex flex-col gap-3 mb-6">
+        <div className="grid grid-cols-2 gap-2.5 mb-4">
           {stats.map((s, i) => (
             <motion.div
               key={s.label}
-              initial={{ opacity: 0, x: -28 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.55, delay: 0.28 + i * 0.16, ease: [0.16, 1, 0.3, 1] }}
-              className="glass rounded-xl px-4 py-3 flex items-center gap-4"
-              style={{ borderLeft: `2px solid ${s.accent}` }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.28 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+              className="glass-strong rounded-xl px-3 py-3 md:px-4 md:py-4 text-center"
+              style={{ borderTop: `2px solid ${s.accent}` }}
             >
-              <div className="shrink-0">
-                <div
-                  className="text-xl md:text-3xl font-black leading-none"
-                  style={{
-                    background: `linear-gradient(90deg, ${s.accent}, #f5f7fa)`,
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    color: "transparent",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  <AnimatedCounter
-                    value={s.value}
-                    prefix={s.prefix ?? ""}
-                    suffix={s.suffix}
-                    duration={2.5}
-                  />
-                </div>
-                <div className="text-[10px] md:text-xs font-semibold text-white/65 mt-0.5">{s.label}</div>
+              <div
+                className="text-xl md:text-3xl font-black leading-none tabular-nums"
+                style={{ color: s.accent }}
+              >
+                {s.prefix ?? ""}
+                {formatStatValue(s.value, s.decimals)}
+                {s.suffix}
               </div>
-              <div className="text-[9px] md:text-[10px] text-white/32 leading-snug border-l border-white/10 pl-4">
-                {s.sub}
-              </div>
+              <div className="text-[10px] md:text-xs font-semibold text-white/75 mt-1.5">{s.label}</div>
+              <div className="text-[8px] md:text-[9px] text-white/35 mt-0.5">{s.sub}</div>
             </motion.div>
           ))}
         </div>
 
-        {/* Segments served */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.9 }}
+          transition={{ duration: 0.5, delay: 0.85 }}
         >
           <p className="text-[9px] md:text-[10px] tracking-[0.25em] uppercase text-white/28 mb-2.5">
-            Segments Served
+            Our Borrowers Profile
           </p>
-          <div className="flex flex-wrap gap-2">
-            {segments.map((seg, i) => (
-              <motion.span
-                key={seg.label}
-                initial={{ opacity: 0, scale: 0.78 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.38, delay: 1.05 + i * 0.1 }}
-                className="glass rounded-full px-3 py-1 text-[9px] md:text-[11px] font-medium tracking-wide"
-                style={{ color: seg.color }}
+          <div className="grid grid-cols-2 gap-2">
+            {borrowerPersonas.map((persona, i) => (
+              <motion.div
+                key={persona.type === "metrics" ? "metrics" : persona.headline}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 1.0 + i * 0.08 }}
+                className={`glass rounded-xl px-3 py-2.5 ${
+                  persona.type === "metrics" ? "col-span-2 flex items-center justify-around gap-4" : "flex items-center gap-2.5"
+                }`}
               >
-                {seg.label}
-              </motion.span>
+                {persona.type === "percent" ? (
+                  <>
+                    <PersonaDonut percent={persona.value} accent={persona.accent} />
+                    <div>
+                      <div className="text-base md:text-lg font-bold text-white">{persona.headline}</div>
+                      <div className="text-[9px] md:text-[10px] text-white/45 leading-snug mt-0.5">{persona.detail}</div>
+                    </div>
+                  </>
+                ) : (
+                  persona.metrics.map((metric) => (
+                    <div key={metric.label} className="text-center">
+                      <div className="text-[9px] md:text-[10px] text-white/40 uppercase tracking-wide">{metric.label}</div>
+                      <div className="text-sm md:text-base font-bold text-[#17b8ce] mt-0.5">{metric.value}</div>
+                    </div>
+                  ))
+                )}
+              </motion.div>
             ))}
           </div>
         </motion.div>
-
-        {/* Tagline */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.6 }}
-          className="mt-5 text-[10px] md:text-xs text-white/28 tracking-wide leading-relaxed"
-        >
-          Blending banking trust with fintech agility — <br />
-          digital-first credit for every Indian business.
-        </motion.p>
       </div>
 
       {/* ── Right panel — India map ── */}
@@ -229,7 +270,6 @@ export function MerchantEcosystemScene() {
           ))}
         </motion.div>
 
-        {/* "Every state active" badge */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -244,6 +284,7 @@ export function MerchantEcosystemScene() {
             Active in Every State & UT
           </span>
         </motion.div>
+      </div>
       </div>
     </div>
   );

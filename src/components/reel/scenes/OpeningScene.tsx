@@ -6,29 +6,6 @@ import { BrandLogo } from "@/components/ui/BrandLogo";
 const TICKER =
   "Channel Partnerships  ·  Co-lending  ·  SME Lending  ·  Merchant Ecosystem  ·  Consumer Finance  ·  AI Underwriting  ·  Instant Disbursal  ·  RBI Regulated NBFC  ·  Real-Time Risk  ·  Digital-First  ·  ";
 
-const pillars = [
-  {
-    label: "Channel Partnerships",
-    sub: "B2B credit distribution",
-    accent: "#17b8ce",
-  },
-  {
-    label: "Co-lending",
-    sub: "Bank & NBFC origination",
-    accent: "#2b7bff",
-  },
-  {
-    label: "Merchant Ecosystem",
-    sub: "End-to-end merchant finance",
-    accent: "#ef6a5a",
-  },
-  {
-    label: "Consumer Finance",
-    sub: "Personalised loan journeys",
-    accent: "#9b7bff",
-  },
-];
-
 export function OpeningScene() {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center text-center overflow-hidden">
@@ -141,27 +118,10 @@ export function OpeningScene() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-7 drop-shadow-[0_0_55px_rgba(23,184,206,0.5)]"
+          className="drop-shadow-[0_0_55px_rgba(23,184,206,0.5)]"
         >
           <BrandLogo size="xl" priority />
         </motion.div>
-
-        {/* Strategy pillars — 2×2 grid */}
-        <div className="grid grid-cols-2 gap-2.5">
-          {pillars.map((p, i) => (
-            <motion.div
-              key={p.label}
-              initial={{ opacity: 0, y: 20, scale: 0.88 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.5, delay: 1.28 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="glass rounded-xl px-4 py-3 flex flex-col items-start min-w-[140px]"
-              style={{ borderLeft: `2px solid ${p.accent}` }}
-            >
-              <span className="text-xs md:text-sm font-semibold text-white/90 tracking-tight leading-tight">{p.label}</span>
-              <span className="text-[9px] md:text-[10px] text-white/38 tracking-wide mt-1">{p.sub}</span>
-            </motion.div>
-          ))}
-        </div>
       </div>
 
       {/* RBI badge — bottom right */}

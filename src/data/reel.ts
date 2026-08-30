@@ -8,8 +8,7 @@ export const reelScenes: ReelScene[] = [
   { id: "products", duration: 8 },
   { id: "ecosystem", duration: 12 },
   { id: "brain", duration: 8 },
-  { id: "pipeline", duration: 10 },
-  { id: "features", duration: 8 },
+  { id: "pipeline", duration: 22 },
   { id: "closing", duration: 7 },
 ];
 
@@ -137,7 +136,38 @@ export const indiaPresenceMarkers: PresenceMarker[] = [
   { id: "wb", x: 412, y: 310 },
 ];
 
-export const aiInputs = ["UPI", "Payments", "GST", "Banking", "Bureau", "VKYC", "AML", "Behaviour"];
+/** Credit-policy & risk signal inputs for the AI brain scene */
+export const aiCreditInputs = [
+  "Bureau & Credit History",
+  "Banking Cash Flow",
+  "KYC / VKYC",
+  "AML & Compliance",
+  "Repayment Behaviour",
+  "Portfolio EWS",
+  "Product Policy Limits",
+  "Exposure & Vintage",
+];
+
+export const aiBrainHighlights = [
+  {
+    id: "variables",
+    title: "~500 Raw Variables",
+    detail: "8 ML underwriting models powering every credit decision",
+  },
+  {
+    id: "repayment",
+    title: "Repayment Capacity",
+    detail: "EMI · EDI · Bullet — matched to borrower cash-flow profile",
+  },
+  {
+    id: "products",
+    title: "Product AI Models",
+    detail: "Dedicated underwriting for ML · PL · BL",
+  },
+];
+
+/** @deprecated use aiCreditInputs */
+export const aiInputs = aiCreditInputs;
 
 export interface PipelineStage {
   id: string;
@@ -152,6 +182,84 @@ export const pipelineStages: PipelineStage[] = [
   { id: "offer", label: "Instant Loan Offer" },
   { id: "agreement", label: "Digital Agreement" },
   { id: "disbursal", label: "Instant Disbursal" },
+];
+
+export interface LendingEngineStat {
+  label: string;
+  value: string;
+}
+
+export interface LendingEnginePillar {
+  id: string;
+  title: string;
+  accent: string;
+  icon: string;
+  points: string[];
+  stats: LendingEngineStat[];
+}
+
+/** Right-to-Win pillars — flow & technology scene */
+export const lendingEnginePillars: LendingEnginePillar[] = [
+  {
+    id: "tech-stack",
+    title: "Digital Lending Tech Stack",
+    accent: "#17b8ce",
+    icon: "/brand/icon-seamless.png",
+    points: [
+      "LOS · LMS · BRE powering our full product suite",
+      "In-house tech wrapper — custom APIs, AI SDLC, faster GTM",
+    ],
+    stats: [
+      { label: "Uptime", value: "99.99% · Availability 99.90%" },
+      { label: "API Volume", value: "1.13 mn requests / day" },
+      { label: "Throughput", value: "110,000 loans / month" },
+    ],
+  },
+  {
+    id: "lean-exec",
+    title: "Lean Setup & Rapid Execution",
+    accent: "#2b7bff",
+    icon: "/brand/icon-fast-flexible.png",
+    points: [
+      "Scalable processes built for quick execution with AI",
+      "Lean, agile org — independent entity geared for speed",
+    ],
+    stats: [
+      { label: "Partners", value: "12 onboarded" },
+      { label: "Products", value: "7 credit products enabled" },
+      { label: "Team", value: "110 talent strength" },
+    ],
+  },
+  {
+    id: "risk-compliance",
+    title: "Robust Risk & Compliance",
+    accent: "#ef6a5a",
+    icon: "/brand/icon-secure.png",
+    points: [
+      "Proprietary U/W scorecards · real-time portfolio monitoring",
+      "Strong ERM, InfoSec & governance — middle-layer compliant",
+    ],
+    stats: [
+      { label: "ML Models", value: "~500 raw variables · 8 ML U/W models" },
+      { label: "Certified", value: "ISO 27001 certified" },
+      { label: "Regulatory", value: "RBI full-scale inspection" },
+    ],
+  },
+  {
+    id: "bp-synergies",
+    title: "BharatPe Synergies",
+    accent: "#9b7bff",
+    icon: "/brand/icon-hasslefree.png",
+    points: [
+      "Only fintech in payments with its own NBFC",
+      "Credit products for BharatPe merchant & consumer white spaces",
+    ],
+    stats: [
+      { label: "Ecosystem", value: "80% BP ecosystem AUM" },
+      { label: "Live Products", value: "ML · PL · BL" },
+      { label: "Pilots", value: "₹9,000 mn add'l annual disbursal" },
+    ],
+  },
 ];
 
 export interface FeatureCard {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { animate } from "framer-motion";
 
 interface AnimatedCounterProps {
@@ -10,6 +10,7 @@ interface AnimatedCounterProps {
   decimals?: number;
   duration?: number;
   className?: string;
+  style?: CSSProperties;
 }
 
 export function AnimatedCounter({
@@ -19,13 +20,12 @@ export function AnimatedCounter({
   decimals = 0,
   duration = 2,
   className = "",
+  style,
 }: AnimatedCounterProps) {
   const [display, setDisplay] = useState(0);
-  const started = useRef(false);
 
   useEffect(() => {
-    if (started.current) return;
-    started.current = true;
+    setDisplay(0);
     const controls = animate(0, value, {
       duration,
       ease: [0.16, 1, 0.3, 1],
@@ -34,11 +34,20 @@ export function AnimatedCounter({
     return () => controls.stop();
   }, [value, duration]);
 
+  const formatted =
+    decimals > 0
+      ? display.toFixed(decimals)
+      : Math.round(display).toLocaleString("en-IN");
+
   return (
-    <span className={className}>
+    <span className={className} style={style}>
       {prefix}
-      {display.toFixed(decimals)}
+      {formatted}
       {suffix}
     </span>
   );
+}
+
+export function formatStatValue(value: number, decimals = 0) {
+  return decimals > 0 ? value.toFixed(decimals) : value.toLocaleString("en-IN");
 }

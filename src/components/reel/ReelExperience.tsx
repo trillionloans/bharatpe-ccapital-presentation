@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentType } from "react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useReelClock } from "@/hooks/useReelClock";
 import { useFullscreen } from "@/hooks/useFullscreen";
@@ -11,7 +11,6 @@ import { ProductsScene } from "@/components/reel/scenes/ProductsScene";
 import { MerchantEcosystemScene } from "@/components/reel/scenes/MerchantEcosystemScene";
 import { AIBrainScene } from "@/components/reel/scenes/AIBrainScene";
 import { PipelineScene } from "@/components/reel/scenes/PipelineScene";
-import { FeatureCardsScene } from "@/components/reel/scenes/FeatureCardsScene";
 import { ClosingScene } from "@/components/reel/scenes/ClosingScene";
 import { reelScenes } from "@/data/reel";
 
@@ -21,7 +20,6 @@ const registry: Record<string, ComponentType> = {
   ecosystem: MerchantEcosystemScene,
   brain: AIBrainScene,
   pipeline: PipelineScene,
-  features: FeatureCardsScene,
   closing: ClosingScene,
 };
 
@@ -29,22 +27,35 @@ const sceneLabels: Record<string, string> = {
   opening: "Opening",
   products: "Products",
   ecosystem: "Pan-India Presence",
-  brain: "AI Brain",
-  pipeline: "Lending Pipeline",
-  features: "Technology Edge",
+  brain: "AI Credit Decision Brain",
+  pipeline: "Lending Engine · Flow & Tech",
   closing: "Closing",
 };
 
+const startPaused = process.env.NODE_ENV === "development";
+
 export function ReelExperience() {
-  const { sceneId, sceneIndex, elapsed, totalDuration, paused, toggle, jumpToScene } =
-    useReelClock();
+  const { sceneId, sceneIndex, elapsed, totalDuration, paused, toggle, pause, jumpToScene } =
+    useReelClock({ startPaused });
   const { enter } = useFullscreen();
   const SceneComponent = registry[sceneId];
   const loopProgress = (elapsed / totalDuration) * 100;
 
-  useEffect(() => {
-    enter();
-  }, [enter]);
+  const goToScene = useCallback(
+    (index: number) => {
+      pause();
+      jumpToScene(index);
+    },
+    [pause, jumpToScene]
+  );
+
+  const goPrev = useCallback(() => {
+    goToScene(sceneIndex - 1 >= 0 ? sceneIndex - 1 : reelScenes.length - 1);
+  }, [goToScene, sceneIndex]);
+
+  const goNext = useCallback(() => {
+    goToScene(sceneIndex + 1 < reelScenes.length ? sceneIndex + 1 : 0);
+  }, [goToScene, sceneIndex]);
 
   // Keyboard controls: Space = pause/play, ← → = prev/next scene
   useEffect(() => {
@@ -55,16 +66,16 @@ export function ReelExperience() {
       }
       if (e.code === "ArrowRight") {
         e.preventDefault();
-        jumpToScene(sceneIndex + 1 < reelScenes.length ? sceneIndex + 1 : 0);
+        goNext();
       }
       if (e.code === "ArrowLeft") {
         e.preventDefault();
-        jumpToScene(sceneIndex - 1 >= 0 ? sceneIndex - 1 : reelScenes.length - 1);
+        goPrev();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [toggle, jumpToScene, sceneIndex]);
+  }, [toggle, goNext, goPrev]);
 
   return (
     <div id="app-root" className="select-none" onPointerDown={enter}>
@@ -104,7 +115,7 @@ export function ReelExperience() {
         {/* Playback controls */}
         <div className="flex items-center gap-1">
           <button
-            onClick={() => jumpToScene(sceneIndex - 1 >= 0 ? sceneIndex - 1 : reelScenes.length - 1)}
+            onClick={goPrev}
             className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/8 text-xs transition-colors"
             title="Previous scene (←)"
           >
@@ -124,7 +135,7 @@ export function ReelExperience() {
           </button>
 
           <button
-            onClick={() => jumpToScene(sceneIndex + 1 < reelScenes.length ? sceneIndex + 1 : 0)}
+            onClick={goNext}
             className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/8 text-xs transition-colors"
             title="Next scene (→)"
           >
@@ -142,18 +153,22 @@ export function ReelExperience() {
       </div>
 
       {/* ── Scene dot nav + progress bar (bottom) ── */}
-      <div className="absolute bottom-0 inset-x-0 z-30 pointer-events-none">
-        <div className="h-0.5 bg-white/10">
+      <div className="absolute bottom-0 inset-x-0 z-30">
+        <div className="h-0.5 bg-white/10 pointer-events-none">
           <div
             className="h-full bg-teal transition-none"
             style={{ width: `${loopProgress}%` }}
           />
         </div>
-        <div className="flex justify-center gap-2 py-4">
+        <div className="flex justify-center gap-2 py-4 pointer-events-auto">
           {reelScenes.map((s, i) => (
-            <span
+            <button
               key={s.id}
-              className="h-1 rounded-full transition-all duration-500"
+              type="button"
+              onClick={() => goToScene(i)}
+              title={sceneLabels[s.id]}
+              aria-label={`Go to ${sceneLabels[s.id]}`}
+              className="h-1 rounded-full transition-all duration-500 cursor-pointer"
               style={{
                 width: i === sceneIndex ? 28 : 10,
                 background: i === sceneIndex ? "#17b8ce" : "rgba(255,255,255,0.2)",

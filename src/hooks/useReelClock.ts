@@ -29,9 +29,9 @@ function sceneStartOffset(index: number) {
   return acc;
 }
 
-export function useReelClock() {
+export function useReelClock(options?: { startPaused?: boolean }) {
   const [elapsed, setElapsed] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(options?.startPaused ?? false);
 
   const pausedRef = useRef(paused);
   pausedRef.current = paused;
@@ -56,6 +56,8 @@ export function useReelClock() {
 
   const toggle = useCallback(() => setPaused((p) => !p), []);
 
+  const pause = useCallback(() => setPaused(true), []);
+
   const jumpToScene = useCallback((index: number) => {
     const clamped = Math.max(0, Math.min(index, reelScenes.length - 1));
     setElapsed(sceneStartOffset(clamped));
@@ -72,6 +74,7 @@ export function useReelClock() {
     sceneElapsed,
     paused,
     toggle,
+    pause,
     jumpToScene,
   };
 }
